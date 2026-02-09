@@ -53,7 +53,7 @@ Different *topics* have been defined for:
 ### MQTT Topic Structure
 
 <p align="center">
-  <img src="images/mqtt.png" width="60%" />
+  <img src="images/mqtt.png" width="20%" />
 </p>
 
 ---
@@ -68,7 +68,7 @@ A web interface was developed using **FastAPI**, allowing:
 The web application acts as a supervision layer without directly interfering with the control logic.
 
 <p align="center">
-  <img src="images/web.png" width="60%" />
+  <img src="images/web.png" width="80%" />
 </p>
 
 ---
