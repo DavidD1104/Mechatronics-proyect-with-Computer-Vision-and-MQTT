@@ -28,13 +28,13 @@ The vision system publishes the detected part type via MQTT, allowing the contro
 ### Detection Results
 
 <p align="center">
-  <img src="images/vision_1.png" width="45%" />
-  <img src="images/vision_2.png" width="45%" />
+  <img src="images/pieza_triangulo.png" width="45%" />
+  <img src="images/pieza_circulo.png" width="45%" />
 </p>
 
 <p align="center">
-  <img src="images/vision_3.png" width="45%" />
-  <img src="images/vision_4.png" width="45%" />
+  <img src="images/pieza_cuadrado.png" width="45%" />
+  <img src="images/piezas.png" width="45%" />
 </p>
 
 ---
