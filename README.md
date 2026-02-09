@@ -21,7 +21,7 @@ The architecture is designed to be **modular, scalable, and easy to debug**, cle
 
 ## 👁️ Computer Vision
 
-Part classification is performed using a **YOLOv8** model trained with a **custom dataset** created and labeled using **Roboflow**.
+Part classification is performed using a **YOLOv8n** model trained with a **custom dataset** created and labeled using **Roboflow**.
 
 The vision system publishes the detected part type via MQTT, allowing the controller to make real-time decisions without tightly coupling both systems.
 
