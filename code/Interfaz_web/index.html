@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clasificador Mecatrónico</title>
+
+  <!-- Fuente moderna -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --primary: #1d4ed8;
+      --success: #15803d;
+      --danger: #b91c1c;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a, #020617);
+      color: white;
+      padding: 22px 40px;
+      border-bottom: 1px solid #020617;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    main {
+      padding: 40px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 26px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .value {
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .run { 
+      background: var(--success);
+      box-shadow: 0 0 0 0 rgba(21,128,61,0.7);
+      animation: pulse 1.5s infinite;
+    }
+
+    .stop { background: var(--danger); }
+    .auto { background: var(--primary); }
+    .manual { background: #4b5563; }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(21,128,61,0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(21,128,61,0); }
+      100% { box-shadow: 0 0 0 0 rgba(21,128,61,0); }
+    }
+
+    .controls {
+      background: var(--card);
+      padding: 28px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+    }
+
+    .controls h2 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    button {
+      padding: 14px 26px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      color: white;
+      letter-spacing: 0.03em;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+
+    .btn-start { background: var(--success); }
+    .btn-stop { background: var(--danger); }
+    .btn-auto { background: var(--primary); }
+    .btn-manual { background: #4b5563; }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  🤖 Clasificador Mecatrónico – Supervisión del Sistema
+</header>
+
+<main>
+
+  <!-- ESTADO -->
+  <div class="grid">
+    <div class="card">
+      <h3>Estado del sistema</h3>
+      <div class="value">
+        <span id="estadoBadge" class="badge stop">---</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Modo de funcionamiento</h3>
+      <div class="value">
+        <span id="modoBadge" class="badge manual">---</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Piezas clasificadas</h3>
+      <div class="value" id="piezas">0</div>
+    </div>
+
+    <div class="card">
+      <h3>Última pieza detectada</h3>
+      <div class="value" id="pieza">-</div>
+    </div>
+  </div>
+
+  <!-- CONTROLES -->
+  <div class="controls">
+    <h2>Control del sistema</h2>
+    <div class="buttons">
+      <button class="btn-start" onclick="start()">START</button>
+      <button class="btn-stop" onclick="stop()">STOP</button>
+      <button class="btn-auto" onclick="modo('AUTO')">MODO AUTO</button>
+      <button class="btn-manual" onclick="modo('MANUAL')">MODO MANUAL</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Proyecto de Mecatrónica · ESP32 + MQTT + FastAPI
+</footer>
+
+<script>
+async function actualizar() {
+  const res = await fetch("/api/estado");
+  const data = await res.json();
+
+  // Estado
+  const estadoBadge = document.getElementById("estadoBadge");
+  estadoBadge.textContent = data.estado ?? "---";
+  estadoBadge.className = "badge " + (data.estado === "RUN" ? "run" : "stop");
+
+  // Modo
+  const modoBadge = document.getElementById("modoBadge");
+  modoBadge.textContent = data.modo ?? "---";
+  modoBadge.className = "badge " + (data.modo === "AUTO" ? "auto" : "manual");
+
+  // Piezas
+  document.getElementById("piezas").textContent = data.piezas ?? 0;
+
+  // Última pieza
+  document.getElementById("pieza").textContent = data.ultima_pieza ?? "-";
+}
+
+function start() {
+  fetch("/api/start", { method: "POST" });
+}
+
+function stop() {
+  fetch("/api/stop", { method: "POST" });
+}
+
+function modo(m) {
+  fetch("/api/modo/" + m, { method: "POST" });
+}
+
+setInterval(actualizar, 1000);
+actualizar();
+</script>
+
+</body>
+</html>
