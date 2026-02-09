@@ -48,7 +48,7 @@ Different *topics* have been defined for:
 - Detected part type transmission
 - Command reception from the web interface
 
-**MQTT Explorer** was used during development to monitor and debug message traffic.
+**MQTT Explorer** was used during development to monitor and debug message traffic. The broker used was broker.hivemq.com with port 1883
 
 ### MQTT Topic Structure
 
