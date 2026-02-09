@@ -53,7 +53,7 @@ Different *topics* have been defined for:
 ### MQTT Topic Structure
 
 <p align="center">
-  <img src="images/mqtt_topics.png" width="60%" />
+  <img src="images/mqtt.png" width="60%" />
 </p>
 
 ---
